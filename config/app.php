@@ -183,6 +183,9 @@ return [
         /**add roles and permission package */
         Spatie\Permission\PermissionServiceProvider::class,
 
+        /**create model from table */
+        Krlove\EloquentModelGenerator\Provider\GeneratorServiceProvider::class,
+
     ],
 
     /*
