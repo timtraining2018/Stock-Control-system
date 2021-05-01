@@ -1,17 +1,16 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-/**
- * @property integer $item_id
- * @property integer $independent_item_id
- * @property Item $item
- * @property Item $item
- */
-class ItemDependence extends Model
+class ItemDependence extends Model implements Auditable
 {
+    use HasFactory;
+    use \OwenIt\Auditing\Auditable;
+
     /**
      * @var array
      */
@@ -22,7 +21,7 @@ class ItemDependence extends Model
      */
     public function independentItems()
     {
-        return $this->belongsTo('App\Item', 'independent_item_id');
+        return $this->belongsTo(Item::class, 'independent_item_id');
     }
 
     /**
@@ -30,6 +29,6 @@ class ItemDependence extends Model
      */
     public function item()
     {
-        return $this->belongsTo('App\Item','item_id');
+        return $this->belongsTo(Item::class,'item_id');
     }
 }

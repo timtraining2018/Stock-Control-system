@@ -1,46 +1,29 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-/**
- * @property integer $id
- * @property integer $item_type_id
- * @property integer $unit_measure_id
- * @property integer $company_id
- * @property string $name
- * @property string $specifics
- * @property float $availability_threshold
- * @property boolean $is_expirydate_applicable
- * @property boolean $is_item_dependent
- * @property string $created_at
- * @property string $updated_at
- * @property Company $company
- * @property ItemType $itemType
- * @property UnitMeasure $unitMeasure
- * @property Item[] $items
- */
-class Item extends Model
+
+class Item extends Model implements Auditable
 {
-    /**
-     * The "type" of the auto-incrementing ID.
-     * 
-     * @var string
-     */
-    protected $keyType = 'integer';
+
+    use HasFactory;
+    use \OwenIt\Auditing\Auditable;
 
     /**
      * @var array
      */
-    protected $fillable = ['item_type_id', 'unit_measure_id', 'company_id', 'name', 'specifics', 'availability_threshold', 'is_expirydate_applicable', 'is_item_dependent', 'created_at', 'updated_at'];
+    protected $fillable = ['item_type_id', 'unit_measure_id', 'company_id', 'name', 'specifics', 'availability_threshold', 'is_expirydate_applicable', 'is_item_dependent'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     /**
@@ -48,7 +31,7 @@ class Item extends Model
      */
     public function itemType()
     {
-        return $this->belongsTo('App\ItemType');
+        return $this->belongsTo(ItemType::class, 'item_type_id');
     }
 
     /**
@@ -56,14 +39,14 @@ class Item extends Model
      */
     public function unitMeasure()
     {
-        return $this->belongsTo('App\UnitMeasure');
+        return $this->belongsTo(UnitMeasure::class, 'unit_measure_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function items()
+    public function itemDependences()
     {
-        return $this->belongsToMany('App\Item', 'item_dependences', 'independent_item_id');
+        return $this->hasMany(ItemDependence::class, 'independent_item_id');
     }
 }

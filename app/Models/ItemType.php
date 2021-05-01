@@ -1,36 +1,28 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-/**
- * @property integer $id
- * @property string $name
- * @property string $short_code
- * @property string $created_at
- * @property string $updated_at
- * @property Item[] $items
- */
-class ItemType extends Model
+
+class ItemType extends Model implements Auditable
 {
-    /**
-     * The "type" of the auto-incrementing ID.
-     * 
-     * @var string
-     */
-    protected $keyType = 'integer';
+    use HasFactory;
+    use \OwenIt\Auditing\Auditable;
 
     /**
      * @var array
      */
-    protected $fillable = ['name', 'short_code', 'created_at', 'updated_at'];
+    protected $fillable = ['name', 'short_code'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function items()
     {
-        return $this->hasMany('App\Item');
+        return $this->hasMany(Item::class, 'item_type_id');
+
     }
 }
